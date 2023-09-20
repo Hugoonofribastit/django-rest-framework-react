@@ -59,3 +59,9 @@ npm create vite           - seleccionamos React con JS seteando el nombre del pr
 
 npm install
 npm i react-router-dom react-hot-toast axios react-hook-form
+
+* para el uso de tailwind en cd client
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+

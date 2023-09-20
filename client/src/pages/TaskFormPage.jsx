@@ -2,8 +2,7 @@ import { useForm } from 'react-hook-form'
 import { createTask, deleteTask, updateTask, getTask } from '../api/tasks.api'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
-
-
+import {toast} from 'react-hot-toast'
 
 
 export function TaskFormPage() {
@@ -19,8 +18,23 @@ export function TaskFormPage() {
     const onSubmit = handleSubmit(async data => {
         if (params.id) {
             await updateTask(params.id, data)
+            toast('Task Updated!',{
+                icon:"🖋️",
+                position:"bottom-right",
+                style:{
+                    background:"#101010",
+                    color:"#fff"
+                }
+            })
         } else {
             await createTask(data)
+            toast.success('Task Created!',{
+                position:"bottom-right",
+                style:{
+                    background:"#101010",
+                    color:"#fff"
+                }
+            })
         }
         navigate("/tasks")
     });
@@ -40,32 +54,44 @@ export function TaskFormPage() {
 
     return (
 
-        <div>
+        <div className='max-w-xl mx-auto'>
             <form onSubmit={onSubmit}>
                 <input type="text" placeholder="title"
                     {...register("title", { required: true })}
+                    className='bg-zinc-700 p-3 rounded-lg block mb-3 w-full'
                 />
                 {errors.title && <span>this field is required</span>}
                 <textarea rows="3" placeholder="description"
                     {...register("description", { required: true })}
+                    className='bg-zinc-700 p-3 rounded-lg block mb-3 w-full'
                 ></textarea>
                 {errors.description && <span>this field is required</span>}
-                <button>Save</button>
+                <button className='bg-indigo-500 p-3 rounded-lg block w-full mt-3'>Save</button>
             </form>
 
             {
                 params.id && (
-                    <button
+                    <div className='flex justify-end'>
+                        <button
+                        className='bg-red-500 p-3 rounded-lg w-48 mt-3'
                         onClick={async () => {
                             const accepted = window.confirm("are you sure?")
                             if (accepted) {
                                 await deleteTask(params.id)
+                                toast.error('Task Deleted!',{
+                                    position:"bottom-right",
+                                    style:{
+                                        background:"#101010",
+                                        color:"#fff"
+                                    }
+                                })
                                 navigate("/tasks")
                             }
                         }}
                     >
                         Delete
                     </button>
+                    </div>
                 )
             }
         </div >
